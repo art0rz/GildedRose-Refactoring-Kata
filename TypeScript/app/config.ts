@@ -1,4 +1,11 @@
-import { AbstractItem, AgedItem, BackstagePassItem, LegendaryItem, NormalItem } from './item';
+import {
+  AbstractItem,
+  AgedItem,
+  BackstagePassItem,
+  ConjuredItem,
+  LegendaryItem,
+  NormalItem,
+} from './item';
 
 export const DEFAULT_MAX_ITEM_QUALITY = 50;
 export const DEFAULT_MIN_ITEM_QUALITY = 0;
@@ -57,7 +64,7 @@ export const itemTypeConfig: Record<ItemType, ItemTypeConfig<any>> = {
     qualityDegradation: 2,
     minQuality: DEFAULT_MIN_ITEM_QUALITY,
     maxQuality: DEFAULT_MAX_ITEM_QUALITY,
-    itemClass: NormalItem,
+    itemClass: ConjuredItem,
   },
 };
 

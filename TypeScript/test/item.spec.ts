@@ -1,7 +1,5 @@
-import { AgedItem, BackstagePassItem, LegendaryItem, NormalItem } from '../app/item';
+import { AgedItem, BackstagePassItem, ConjuredItem, LegendaryItem, NormalItem } from '../app/item';
 import { expect } from 'chai';
-import { itemFactory } from '../app/factory';
-import { ItemType } from '../app/config';
 
 describe('item types', () => {
   describe('NormalItem', () => {
@@ -109,12 +107,24 @@ describe('item types', () => {
     });
   });
 
-  describe('conjured', () => {
-    it('should decrease in quality twice as fast as regular items', () => {
-      const item = itemFactory(ItemType.CONJURED, 'conjured', 10, 10);
+  describe('ConjuredItem', () => {
+    it('should reduce in quality twice as fast as regular items', () => {
+      const item = new ConjuredItem('Conjured Mana Cake', 10, 10);
       item.updateQuality();
       expect(item.sellIn).to.equal(9);
       expect(item.quality).to.equal(8);
+      item.updateQuality();
+      expect(item.sellIn).to.equal(8);
+      expect(item.quality).to.equal(6);
+    });
+    it('should not reduce the quality below 0 after sellIn', () => {
+      const item = new ConjuredItem('Conjured Mana Cake', 1, 2);
+      item.updateQuality();
+      expect(item.sellIn).to.equal(0);
+      expect(item.quality).to.equal(0);
+      item.updateQuality();
+      expect(item.sellIn).to.equal(-1);
+      expect(item.quality).to.equal(0);
     });
   });
 });

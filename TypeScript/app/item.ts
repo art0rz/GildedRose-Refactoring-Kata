@@ -59,10 +59,9 @@ export class AgedItem extends NormalItem {
 /**
  * Legendary items never decrease in quality
  */
-export class LegendaryItem extends NormalItem {
+export class LegendaryItem extends AbstractItem {
   constructor(name: string, sellIn: number, quality: number) {
-    super(name, sellIn, quality);
-    this.type = ItemType.LEGENDARY;
+    super(ItemType.LEGENDARY, name, sellIn, quality);
   }
 
   updateQuality(days: number = 1): number {
@@ -106,5 +105,15 @@ export class BackstagePassItem extends AbstractItem {
     }
 
     return this.quality;
+  }
+}
+
+/**
+ * "Conjured" items degrade in Quality twice as fast as normal items
+ */
+export class ConjuredItem extends NormalItem {
+  constructor(name: string, sellIn: number, quality: number) {
+    super(name, sellIn, quality);
+    this.type = ItemType.CONJURED;
   }
 }
