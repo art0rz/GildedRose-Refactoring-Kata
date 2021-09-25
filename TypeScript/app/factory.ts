@@ -1,5 +1,4 @@
-import { getConfigForType, ItemType } from './config';
-import { AbstractItem } from './item';
+import { getConfigForType, ItemType, AbstractItem } from './item';
 
 /**
  * Given a ItemType, constructs the appropriate item class with the given properties and returns it.
@@ -16,5 +15,5 @@ export const itemFactory = (
   sellIn: number,
   quality: number,
 ): AbstractItem => {
-  return new (getConfigForType(type).itemClass)(name, sellIn, quality);
+  return new (getConfigForType(type).itemClass())(name, sellIn, quality);
 };

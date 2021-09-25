@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { itemFactory } from '../app/factory';
-import { ItemType } from '../app/config';
-import { AgedItem, BackstagePassItem, LegendaryItem, NormalItem } from '../app/item';
+import { ItemType, AgedItem, BackstagePassItem, LegendaryItem, NormalItem } from '../app/item';
 
 describe('itemFactory', () => {
   it('should throw an error when given an ItemType that does not exist', () => {
