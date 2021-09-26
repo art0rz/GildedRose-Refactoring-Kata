@@ -47,7 +47,7 @@
       "test/**"
     ],
     "require": [
-      "ts-node/register"
+      "./node_modules/ts-node/register"
     ],
     "reporter": [
       "html",
