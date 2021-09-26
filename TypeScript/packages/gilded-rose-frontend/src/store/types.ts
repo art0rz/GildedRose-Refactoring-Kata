@@ -1,0 +1,6 @@
+enum Types {
+  UPDATE_ITEMS = 'UPDATE_ITEMS',
+  UPDATE_ITEMS_COMPLETE = 'UPDATE_ITEMS_COMPLETE',
+}
+
+export default Types;
