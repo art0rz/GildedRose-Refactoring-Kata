@@ -1,11 +1,12 @@
 import type { NextPage } from 'next';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { Paper } from '@mui/material';
 import Layout from '../components/layout';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateItems } from '../store/actions';
+import { deleteItem, updateItems } from '../store/actions';
 import DataGridActionsCell from '../components/data-grid-actions-cell';
+import DataGridToolbar from '../components/data-grid-toolbar';
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', flex: 1, editable: true },
@@ -30,10 +31,37 @@ const Home: NextPage = () => {
     dispatch(updateItems());
   }, [dispatch]);
 
+  const [selectedItems, setSelectedItems] = useState<Array<string>>([]);
+
+  const onSelectionChange = useCallback(async (ids: GridSelectionModel) => {
+    setSelectedItems(ids as Array<string>);
+  }, []);
+
+  const onDeleteSelectionClick = useCallback(() => {
+    console.log('woop');
+    Promise.all(selectedItems.map((id) => dispatch(deleteItem(id))));
+  }, [selectedItems, dispatch]);
+
   return (
     <Layout>
       <Paper>
-        <DataGrid rows={items} columns={columns} loading={isUpdatingItems} checkboxSelection />
+        <DataGrid
+          rows={items}
+          columns={columns}
+          loading={isUpdatingItems}
+          checkboxSelection
+          onSelectionModelChange={onSelectionChange}
+          filterMode={'client'}
+          components={{
+            Toolbar: DataGridToolbar,
+          }}
+          componentsProps={{
+            toolbar: {
+              disableDeleteButton: selectedItems.length === 0,
+              onDeleteClick: onDeleteSelectionClick,
+            },
+          }}
+        />
       </Paper>
     </Layout>
   );
