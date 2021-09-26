@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint:eslint": "next lint",
-    "lint:prettier": "prettier \"app/*.{js,ts}\" --list-different",
+    "lint:prettier": "prettier \"src/**/*.{js,ts}\" --list-different",
     "lint": "npm-run-all lint:*",
     "fix:eslint": "next lint --fix",
-    "fix:prettier": "prettier \"{pages,components}/**/*.{js,ts}\" --write",
+    "fix:prettier": "prettier \"src/**/*.{js,ts}\" --write",
     "fix": "npm-run-all fix:*"
   },
   "dependencies": {
