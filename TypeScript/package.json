@@ -1,6 +1,16 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
-  ]
+    "packages/gilded-rose-lib",
+    "packages/gilded-rose-api-middleware",
+    "packages/gilded-rose-frontend"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "watch": "wsrun -c watch",
+    "start": "yarn workspace gilded-rose-frontend run start"
+  },
+  "dependencies": {
+    "wsrun": "^5.2.4"
+  }
 }
