@@ -5,8 +5,8 @@ import {
   Toolbar,
   Typography,
   useTheme,
-} from "@mui/material";
-import { ClassNames } from "@emotion/react";
+} from '@mui/material';
+import { ClassNames } from '@emotion/react';
 
 export interface Breadcrumb {
   title: string;
@@ -23,7 +23,7 @@ const AppBar = ({ breadcrumbs = [] }: Props) => {
     <MuiAppBar position="sticky">
       <Toolbar>
         <ClassNames>
-          {({ css, cx }) => (
+          {({ css }) => (
             <Breadcrumbs
               separator="›"
               aria-label="breadcrumb"
@@ -31,28 +31,14 @@ const AppBar = ({ breadcrumbs = [] }: Props) => {
                 separator: css({ color: theme.palette.common.white }),
               }}
             >
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                sx={{ flexGrow: 1 }}
-              >
-                <Link
-                  underline="hover"
-                  color={theme.palette.common.white}
-                  href="/"
-                >
+              <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+                <Link underline="hover" color={theme.palette.common.white} href="/">
                   Gilded Rose Inventory Manager
                 </Link>
               </Typography>
-              {breadcrumbs.map((breadcrumb) => (
-                <Link
-                  underline="hover"
-                  color={theme.palette.common.white}
-                  href={breadcrumb.href}
-                >
-                  Core
+              {breadcrumbs.map(({ href, title }) => (
+                <Link key={title} underline="hover" color={theme.palette.common.white} href={href}>
+                  {title}
                 </Link>
               ))}
             </Breadcrumbs>
