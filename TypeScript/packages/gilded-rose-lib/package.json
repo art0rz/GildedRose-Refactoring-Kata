@@ -11,6 +11,7 @@
     "bundle:clean": "rimraf dist/**/*",
     "bundle:build": "microbundle",
     "bundle": "npm-run-all bundle:*",
+    "watch": "microbundle -w",
     "precompile": "rimraf app/**/*.js test/**/*.js",
     "compile": "tsc",
     "pretest": "rimraf app/**/*.js test/**/*.js",

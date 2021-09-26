@@ -43,6 +43,16 @@ export abstract class AbstractItem extends Item {
    * @return {number}
    */
   abstract updateQuality(days?: number): number;
+
+  public toJson() {
+    return {
+      type: this.type,
+      id: this.id,
+      name: this.name,
+      quality: this.quality,
+      sellIn: this.sellIn,
+    };
+  }
 }
 
 /**

@@ -29,4 +29,8 @@ export class GildedRose {
     }
     return this.items;
   }
+
+  add(item: AbstractItem) {
+    this.items.push(item);
+  }
 }

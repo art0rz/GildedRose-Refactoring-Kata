@@ -13,6 +13,7 @@
     "bundle:clean": "rimraf dist/**/*",
     "bundle:build": "microbundle",
     "bundle": "npm-run-all bundle:*",
+    "watch": "microbundle -w",
     "lint:eslint": "next lint",
     "lint:prettier": "prettier \"src/*.{js,ts}\" --list-different",
     "lint": "npm-run-all lint:*",
