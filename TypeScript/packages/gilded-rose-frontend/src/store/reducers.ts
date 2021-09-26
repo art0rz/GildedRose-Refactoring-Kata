@@ -32,6 +32,19 @@ const inventoryReducer = (
         isUpdatingItems: false,
       };
     }
+    case Types.DELETE_ITEM: {
+      return {
+        ...state,
+        isUpdatingItems: true,
+      };
+    }
+    case Types.DELETE_ITEM_COMPLETE: {
+      return {
+        ...state,
+        items: payload,
+        isUpdatingItems: false,
+      };
+    }
     default:
       return state;
   }

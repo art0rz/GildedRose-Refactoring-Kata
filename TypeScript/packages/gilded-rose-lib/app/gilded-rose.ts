@@ -33,4 +33,8 @@ export class GildedRose {
   add(item: AbstractItem) {
     this.items.push(item);
   }
+
+  delete(id: string) {
+    this.items = this.items.filter((item) => item.id !== id);
+  }
 }

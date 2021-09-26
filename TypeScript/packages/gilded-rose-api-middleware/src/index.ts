@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import uuid from "./lib/uuid";
 import nextConnect from "next-connect";
 import {
   AbstractItem,
@@ -27,30 +26,19 @@ const GildedRoseApiMiddleware = () => {
       .filter((item) => item !== undefined) as Array<AbstractItem>
   );
 
-  handler.get((req: NextApiRequest, res: NextApiResponse<Data>) => {
-    res
-      .status(200)
-      .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
-  });
-
-  handler.post((req: NextApiRequest, res: NextApiResponse<{}>) => {
-    const data = JSON.parse(req.body);
-    // TODO: better validation
-    if (data.name && data.quality && data.sellIn && data.type) {
-      const item = itemFactory(
-        data.type,
-        uuid(),
-        data.name,
-        data.quality,
-        data.sellIn
-      );
-      gildedRose.add(item);
-      res.status(200).json(item.toJson());
-
-      return;
-    }
-    res.status(500).json({});
-  });
+  handler
+    .get((req: NextApiRequest, res: NextApiResponse<Data>) => {
+      res
+        .status(200)
+        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
+    })
+    .delete((req: NextApiRequest, res: NextApiResponse<Data>) => {
+      const { id } = JSON.parse(req.body);
+      gildedRose.delete(id);
+      res
+        .status(200)
+        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
+    });
 
   return handler;
 };
