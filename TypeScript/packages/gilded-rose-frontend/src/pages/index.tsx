@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteItem, updateItems } from '../store/actions';
 import DataGridActionsCell from '../components/data-grid-actions-cell';
 import DataGridToolbar from '../components/data-grid-toolbar';
+import ItemModal from '../components/item-modal';
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', flex: 1, editable: true },
@@ -32,9 +33,14 @@ const Home: NextPage = () => {
   }, [dispatch]);
 
   const [selectedItems, setSelectedItems] = useState<Array<string>>([]);
+  const [itemModalOpen, setItemModalOpen] = useState(false);
 
   const onSelectionChange = useCallback(async (ids: GridSelectionModel) => {
     setSelectedItems(ids as Array<string>);
+  }, []);
+
+  const onAddClick = useCallback(() => {
+    setItemModalOpen(true);
   }, []);
 
   const onDeleteSelectionClick = useCallback(() => {
@@ -59,10 +65,12 @@ const Home: NextPage = () => {
             toolbar: {
               disableDeleteButton: selectedItems.length === 0,
               onDeleteClick: onDeleteSelectionClick,
+              onAddClick: onAddClick,
             },
           }}
         />
       </Paper>
+      <ItemModal open={itemModalOpen} onClose={() => undefined} />
     </Layout>
   );
 };

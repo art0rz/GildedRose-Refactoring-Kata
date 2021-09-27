@@ -4,12 +4,13 @@ import { Add, DeleteForever } from '@mui/icons-material';
 interface Props {
   disableDeleteButton: boolean;
   onDeleteClick: () => void;
+  onAddClick: () => void;
 }
 
-const DataGridToolbar = ({ disableDeleteButton, onDeleteClick }: Props) => {
+const DataGridToolbar = ({ disableDeleteButton, onDeleteClick, onAddClick }: Props) => {
   return (
     <Box sx={{ p: 1 }}>
-      <IconButton size="small" color="primary">
+      <IconButton size="small" color="primary" onClick={onAddClick}>
         <Add />
         Add
       </IconButton>
