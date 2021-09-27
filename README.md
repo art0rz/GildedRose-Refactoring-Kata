@@ -14,8 +14,7 @@ Included in the CMS is a simple API which keeps track of the inventory. In a rea
 database, but to keep things simple (and managable time-wise), I've kept it to a database in memory. The API is also a
 separate package, located in `TypeScript/packages/gilded-rose-api-middleware`
 
-I've kept the refactoring kata, the CMS and the API middleware separate by leveraging Yarn workspaces, which allowed me
-to keep the packages separate, while still being to use one another as normal npm packages.
+Using Yarn Workspaces, the refactoring kata, the CMS and the API middleware are kept in separate packages.
 
 ## Running the code
 
