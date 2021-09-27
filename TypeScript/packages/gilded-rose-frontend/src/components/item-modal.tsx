@@ -1,7 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Box, Button, MenuItem, Modal, Paper, Select, TextField, Typography } from '@mui/material';
-import { ItemType } from 'gilded-rose-lib';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Modal,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { Item, ItemType } from 'gilded-rose-lib';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -9,6 +19,8 @@ import * as yup from 'yup';
 interface Props {
   open: boolean;
   onClose: () => void;
+  onSubmit: (item: Item) => void;
+  loading: boolean;
 }
 
 const itemTypeCopy = {
@@ -19,6 +31,15 @@ const itemTypeCopy = {
   [ItemType.CONJURED]: 'Conjured',
 };
 
+const boxStyles = ({ loading }: { loading: boolean }) => css`
+  position: relative;
+  ${loading === true &&
+  `
+  opacity: 0.3;
+  pointer-events: none;
+  `}
+`;
+
 const schema = yup
   .object({
     type: yup.string().default(ItemType.NORMAL).oneOf(Object.values(ItemType)),
@@ -28,7 +49,7 @@ const schema = yup
   })
   .required();
 
-const ItemModal = ({ open, onClose }: Props) => {
+const ItemModal = ({ open, onClose, onSubmit, loading }: Props) => {
   const {
     register,
     handleSubmit,
@@ -37,7 +58,6 @@ const ItemModal = ({ open, onClose }: Props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => console.log(data);
   return (
     <Modal
       open={open}
@@ -50,7 +70,18 @@ const ItemModal = ({ open, onClose }: Props) => {
       `}
     >
       <Paper elevation={24}>
+        {loading && (
+          <CircularProgress
+            css={css`
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            `}
+          />
+        )}
         <Box
+          css={boxStyles({ loading })}
           onSubmit={handleSubmit(onSubmit)}
           component="form"
           autoCorrect={'off'}
@@ -94,10 +125,6 @@ const ItemModal = ({ open, onClose }: Props) => {
             error={errors.sellIn !== undefined}
           />
           <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
         </Box>
       </Paper>
     </Modal>

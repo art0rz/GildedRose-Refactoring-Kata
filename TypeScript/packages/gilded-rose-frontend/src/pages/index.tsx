@@ -4,16 +4,17 @@ import { Paper } from '@mui/material';
 import Layout from '../components/layout';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteItem, updateItems } from '../store/actions';
+import { createItem, deleteItem, updateItems } from '../store/actions';
 import DataGridActionsCell from '../components/data-grid-actions-cell';
 import DataGridToolbar from '../components/data-grid-toolbar';
 import ItemModal from '../components/item-modal';
+import { Item } from 'gilded-rose-lib';
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', flex: 1, editable: true },
-  { field: 'type', headerName: 'Type', width: 150, editable: true },
-  { field: 'quality', headerName: 'Quality', width: 150, editable: true },
-  { field: 'sellIn', headerName: 'Sell in', width: 150, editable: true },
+  { field: 'name', headerName: 'Name', flex: 1 },
+  { field: 'type', headerName: 'Type', width: 150 },
+  { field: 'quality', headerName: 'Quality', width: 150 },
+  { field: 'sellIn', headerName: 'Sell in', width: 150 },
   {
     disableColumnMenu: true,
     filterable: false,
@@ -27,6 +28,7 @@ const columns: GridColDef[] = [
 
 const Home: NextPage = () => {
   const { items, isUpdatingItems } = useSelector((state) => state.inventory);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(updateItems());
@@ -47,6 +49,14 @@ const Home: NextPage = () => {
     console.log('woop');
     Promise.all(selectedItems.map((id) => dispatch(deleteItem(id))));
   }, [selectedItems, dispatch]);
+
+  const onNewItemSubmit = useCallback(
+    async (item: Item) => {
+      await dispatch(createItem(item));
+      setItemModalOpen(false);
+    },
+    [dispatch],
+  );
 
   return (
     <Layout>
@@ -70,7 +80,12 @@ const Home: NextPage = () => {
           }}
         />
       </Paper>
-      <ItemModal open={itemModalOpen} onClose={() => undefined} />
+      <ItemModal
+        open={itemModalOpen}
+        onClose={() => undefined}
+        onSubmit={onNewItemSubmit}
+        loading={isUpdatingItems}
+      />
     </Layout>
   );
 };

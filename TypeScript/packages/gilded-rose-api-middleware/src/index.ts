@@ -8,6 +8,7 @@ import {
   ItemType,
 } from "gilded-rose-lib";
 import data from "./data.json";
+import uuid from "./lib/uuid";
 
 type Data = {
   inventory: typeof data;
@@ -35,6 +36,15 @@ const GildedRoseApiMiddleware = () => {
     .delete((req: NextApiRequest, res: NextApiResponse<Data>) => {
       const { id } = JSON.parse(req.body);
       gildedRose.delete(id);
+      res
+        .status(200)
+        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
+    })
+    .post((req: NextApiRequest, res: NextApiResponse<Data>) => {
+      const item = JSON.parse(req.body);
+      gildedRose.items.push(
+        itemFactory(item.type, uuid(), item.name, item.sellIn, item.quality)
+      );
       res
         .status(200)
         .json({ inventory: gildedRose.items.map((item) => item.toJson()) });

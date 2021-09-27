@@ -45,6 +45,19 @@ const inventoryReducer = (
         isUpdatingItems: false,
       };
     }
+    case Types.CREATE_ITEM: {
+      return {
+        ...state,
+        isUpdatingItems: true,
+      };
+    }
+    case Types.CREATE_ITEM_COMPLETE: {
+      return {
+        ...state,
+        items: payload,
+        isUpdatingItems: false,
+      };
+    }
     default:
       return state;
   }
