@@ -1,3 +1,5 @@
+import { ITypedItem } from './types';
+
 export const DEFAULT_MAX_ITEM_QUALITY = 50;
 export const DEFAULT_MIN_ITEM_QUALITY = 0;
 
@@ -53,13 +55,14 @@ export abstract class AbstractItem extends Item {
    */
   abstract updateQuality(days?: number): number;
 
-  public toJSON() {
+  public toJSON(): ITypedItem {
     return {
       type: this.type,
       id: this.id,
       name: this.name,
       quality: this.quality,
       sellIn: this.sellIn,
+      isConjured: this.isConjured,
     };
   }
 
