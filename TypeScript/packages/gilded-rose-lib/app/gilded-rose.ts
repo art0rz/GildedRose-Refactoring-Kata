@@ -39,7 +39,14 @@ export class GildedRose {
     }
 
     if (item.type !== originalItem.type) {
-      const newItem = itemFactory(item.type, id, item.name, item.sellIn, item.quality);
+      const newItem = itemFactory(
+        item.type,
+        id,
+        item.name,
+        item.sellIn,
+        item.quality,
+        item.isConjured,
+      );
       this.items.splice(this.items.indexOf(originalItem), 1, newItem);
 
       return newItem;

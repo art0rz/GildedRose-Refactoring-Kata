@@ -66,7 +66,7 @@ export abstract class AbstractItem extends Item {
     };
   }
 
-  public update({ name, quality, sellIn }: Partial<Item>) {
+  public update({ name, quality, sellIn, isConjured }: Partial<ITypedItem>) {
     if (name !== undefined) {
       this.name = name;
     }
@@ -75,6 +75,9 @@ export abstract class AbstractItem extends Item {
     }
     if (sellIn !== undefined) {
       this.sellIn = sellIn;
+    }
+    if (isConjured !== undefined) {
+      this.isConjured = isConjured;
     }
   }
 

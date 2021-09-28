@@ -3,8 +3,11 @@ import { css } from '@emotion/react';
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   MenuItem,
   Modal,
   Paper,
@@ -56,6 +59,36 @@ const ControlledSelect = ({
   );
 };
 
+const ControlledCheckbox = ({
+  name,
+  label,
+  control,
+}: SelectProps & UseControllerProps<Partial<ITypedItem>>) => {
+  const {
+    field: { ref, ...inputProps },
+  } = useController({
+    name,
+    control,
+    rules: { required: true },
+  });
+
+  return (
+    <FormGroup>
+      <FormControlLabel
+        control={
+          <Checkbox
+            {...inputProps}
+            name={name}
+            inputRef={ref}
+            checked={inputProps.value as boolean}
+          />
+        }
+        label={label}
+      />
+    </FormGroup>
+  );
+};
+
 const schema = yup
   .object({
     id: yup.string(),
@@ -63,6 +96,7 @@ const schema = yup
     name: yup.string().required(),
     quality: yup.number().integer().required(),
     sellIn: yup.number().integer().required(),
+    isConjured: yup.bool(),
   })
   .required();
 
@@ -100,6 +134,7 @@ const ItemModal = ({ open, onClose, onSubmit, loading, item }: Props) => {
       setValue('name', item.name);
       setValue('quality', item.quality);
       setValue('sellIn', item.sellIn);
+      setValue('isConjured', item.isConjured);
     }
   }, [item, setValue]);
 
@@ -173,6 +208,9 @@ const ItemModal = ({ open, onClose, onSubmit, loading, item }: Props) => {
             type="number"
             error={errors.sellIn !== undefined}
           />
+
+          <ControlledCheckbox control={control} name="isConjured" label="This is a conjured item" />
+
           <Button onClick={handleSubmit(onSubmit)} variant={'contained'}>
             Submit
           </Button>
