@@ -4,7 +4,8 @@
     "id": "3a5026b2-ea16-4445-a6d7-bc62e703270d",
     "name": "+5 Dexterity Vest",
     "sellIn": 10,
-    "quality": 10
+    "quality": 10,
+    "isConjured": true
   },
   {
     "type": "aged",
@@ -12,6 +13,14 @@
     "name": "Aged Brie",
     "sellIn": 10,
     "quality": 10
+  },
+  {
+    "type": "aged",
+    "id": "f0685ee5-420c-4812-8ec4-5d5673e692ee",
+    "name": "Aged Brie",
+    "sellIn": 10,
+    "quality": 10,
+    "isConjured": true
   },
   {
     "type": "normal",
@@ -32,7 +41,8 @@
     "id": "d4fc9c3c-f278-4157-a207-ef2106a8197d",
     "name": "Sulfuras, Hand of Ragnaros",
     "sellIn": -0,
-    "quality": 80
+    "quality": 80,
+    "isConjured": true
   },
   {
     "type": "backstage-pass",
@@ -46,7 +56,8 @@
     "id": "ada9afdf-3870-4803-b23e-1888d3aa566e",
     "name": "Backstage passes to a TAFKAL80ETC concert",
     "sellIn": 10,
-    "quality": 49
+    "quality": 49,
+    "isConjured": true
   },
   {
     "type": "backstage-pass",

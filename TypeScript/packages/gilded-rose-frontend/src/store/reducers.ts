@@ -38,7 +38,7 @@ const inventoryReducer = (
       return {
         ...state,
         items: (payload as Array<AbstractItem>).map((item) =>
-          itemFactory(item.type, item.id, item.name, item.sellIn, item.quality),
+          itemFactory(item.type, item.id, item.name, item.sellIn, item.quality, item.isConjured),
         ),
         isUpdatingItems: false,
       };

@@ -31,9 +31,16 @@ const GildedRoseApiMiddleware = ({ absolutePath, catchAllKey }: Config) => {
   const gildedRose = new GildedRose(
     // data would normally be fetched from a database or something
     data
-      .map(({ type, id, name, sellIn, quality }) => {
+      .map(({ type, id, name, sellIn, quality, isConjured }) => {
         if (Object.values(ItemType).includes(type as ItemType)) {
-          return itemFactory(type as ItemType, id, name, sellIn, quality);
+          return itemFactory(
+            type as ItemType,
+            id,
+            name,
+            sellIn,
+            quality,
+            isConjured
+          );
         }
       })
       .filter((item) => item !== undefined) as Array<AbstractItem>
@@ -66,7 +73,14 @@ const GildedRoseApiMiddleware = ({ absolutePath, catchAllKey }: Config) => {
     .post(absolutePath, (req: NextApiRequest, res: NextApiResponse<Data>) => {
       const item = JSON.parse(req.body);
       gildedRose.items.push(
-        itemFactory(item.type, uuid(), item.name, item.sellIn, item.quality)
+        itemFactory(
+          item.type,
+          uuid(),
+          item.name,
+          item.sellIn,
+          item.quality,
+          item.isConjured
+        )
       );
       res
         .status(200)

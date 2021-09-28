@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { DataGrid, GridSelectionModel } from '@mui/x-data-grid';
-import { Paper } from '@mui/material';
+import { Checkbox, Paper } from '@mui/material';
 import Layout from '../components/layout';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,6 +66,14 @@ const Home: NextPage = () => {
             { field: 'type', headerName: 'Type', width: 150 },
             { field: 'quality', headerName: 'Quality', width: 150 },
             { field: 'sellIn', headerName: 'Sell in', width: 150 },
+            {
+              field: 'isConjured',
+              headerName: 'Conjured',
+              width: 150,
+              renderCell({ value }) {
+                return <Checkbox disabled={true} checked={value as boolean} />;
+              },
+            },
             {
               disableColumnMenu: true,
               filterable: false,
