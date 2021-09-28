@@ -1,40 +1,25 @@
 import type { NextPage } from 'next';
-import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridSelectionModel } from '@mui/x-data-grid';
 import { Paper } from '@mui/material';
 import Layout from '../components/layout';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createItem, deleteItem, updateItems } from '../store/actions';
+import { createItem, deleteItem, getItems, updateItem } from '../store/actions';
 import DataGridActionsCell from '../components/data-grid-actions-cell';
 import DataGridToolbar from '../components/data-grid-toolbar';
 import ItemModal from '../components/item-modal';
-import { Item } from 'gilded-rose-lib';
-
-const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', flex: 1 },
-  { field: 'type', headerName: 'Type', width: 150 },
-  { field: 'quality', headerName: 'Quality', width: 150 },
-  { field: 'sellIn', headerName: 'Sell in', width: 150 },
-  {
-    disableColumnMenu: true,
-    filterable: false,
-    sortable: false,
-    field: 'actions',
-    headerName: '',
-    disableExport: true,
-    renderCell: DataGridActionsCell,
-  },
-];
+import { AbstractItem, Item } from 'gilded-rose-lib';
 
 const Home: NextPage = () => {
   const { items, isUpdatingItems } = useSelector((state) => state.inventory);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(updateItems());
+    dispatch(getItems());
   }, [dispatch]);
 
   const [selectedItems, setSelectedItems] = useState<Array<string>>([]);
+  const [editingItem, setEditingItem] = useState<AbstractItem | undefined>(undefined);
   const [itemModalOpen, setItemModalOpen] = useState(false);
 
   const onSelectionChange = useCallback(async (ids: GridSelectionModel) => {
@@ -45,17 +30,30 @@ const Home: NextPage = () => {
     setItemModalOpen(true);
   }, []);
 
+  const onEditItemClick = useCallback((row: AbstractItem) => {
+    setEditingItem(row);
+    setItemModalOpen(true);
+  }, []);
+
+  const onModalClose = useCallback(() => {
+    setItemModalOpen(false);
+    setEditingItem(undefined);
+  }, []);
+
   const onDeleteSelectionClick = useCallback(() => {
-    console.log('woop');
     Promise.all(selectedItems.map((id) => dispatch(deleteItem(id))));
   }, [selectedItems, dispatch]);
 
   const onNewItemSubmit = useCallback(
     async (item: Item) => {
-      await dispatch(createItem(item));
+      if (editingItem !== undefined) {
+        await dispatch(updateItem(editingItem.id, item));
+      } else {
+        await dispatch(createItem(item));
+      }
       setItemModalOpen(false);
     },
-    [dispatch],
+    [dispatch, editingItem],
   );
 
   return (
@@ -63,7 +61,23 @@ const Home: NextPage = () => {
       <Paper>
         <DataGrid
           rows={items}
-          columns={columns}
+          columns={[
+            { field: 'name', headerName: 'Name', flex: 1 },
+            { field: 'type', headerName: 'Type', width: 150 },
+            { field: 'quality', headerName: 'Quality', width: 150 },
+            { field: 'sellIn', headerName: 'Sell in', width: 150 },
+            {
+              disableColumnMenu: true,
+              filterable: false,
+              sortable: false,
+              field: 'actions',
+              headerName: '',
+              disableExport: true,
+              renderCell: (props) => (
+                <DataGridActionsCell onEditClick={onEditItemClick} {...props} />
+              ),
+            },
+          ]}
           loading={isUpdatingItems}
           checkboxSelection
           onSelectionModelChange={onSelectionChange}
@@ -82,9 +96,10 @@ const Home: NextPage = () => {
       </Paper>
       <ItemModal
         open={itemModalOpen}
-        onClose={() => undefined}
+        onClose={onModalClose}
         onSubmit={onNewItemSubmit}
         loading={isUpdatingItems}
+        item={editingItem}
       />
     </Layout>
   );

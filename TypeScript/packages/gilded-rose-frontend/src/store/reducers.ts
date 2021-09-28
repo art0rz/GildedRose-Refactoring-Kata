@@ -1,60 +1,60 @@
 import { combineReducers } from 'redux';
 import Types from './types';
-import { Item, ItemType } from 'gilded-rose-lib';
+import { AbstractItem, itemFactory } from 'gilded-rose-lib';
+
+interface DefaultAction {
+  type: Types.GET_ITEMS | Types.UPDATE_ITEM;
+  payload: undefined;
+}
+
+interface GetItemsAction {
+  type: Types.GET_ITEMS_COMPLETE;
+  payload: Array<AbstractItem>;
+}
+
+interface UpdateItemAction {
+  type: Types.UPDATE_ITEM_COMPLETE;
+  payload: AbstractItem;
+}
 
 const inventoryReducer = (
   state: {
-    items: Array<{
-      id: string;
-      name: string;
-      sellIn: number;
-      quality: number;
-      type: ItemType;
-    }>;
+    items: Array<AbstractItem>;
     isUpdatingItems: boolean;
   } = {
     items: [],
     isUpdatingItems: false,
   },
-  { type, payload }: { type: Types; payload: Array<Item> },
+  { type, payload }: DefaultAction | GetItemsAction | UpdateItemAction,
 ) => {
   switch (type) {
-    case Types.UPDATE_ITEMS: {
+    case Types.GET_ITEMS: {
       return {
         ...state,
         isUpdatingItems: true,
       };
     }
-    case Types.UPDATE_ITEMS_COMPLETE: {
+    case Types.GET_ITEMS_COMPLETE: {
       return {
         ...state,
-        items: payload,
+        items: (payload as Array<AbstractItem>).map((item) =>
+          itemFactory(item.type, item.id, item.name, item.sellIn, item.quality),
+        ),
         isUpdatingItems: false,
       };
     }
-    case Types.DELETE_ITEM: {
+    case Types.UPDATE_ITEM: {
       return {
         ...state,
         isUpdatingItems: true,
       };
     }
-    case Types.DELETE_ITEM_COMPLETE: {
+    case Types.UPDATE_ITEM_COMPLETE: {
       return {
         ...state,
-        items: payload,
-        isUpdatingItems: false,
-      };
-    }
-    case Types.CREATE_ITEM: {
-      return {
-        ...state,
-        isUpdatingItems: true,
-      };
-    }
-    case Types.CREATE_ITEM_COMPLETE: {
-      return {
-        ...state,
-        items: payload,
+        items: state.items.map((item) =>
+          item.id === (payload as AbstractItem).id ? payload : item,
+        ),
         isUpdatingItems: false,
       };
     }

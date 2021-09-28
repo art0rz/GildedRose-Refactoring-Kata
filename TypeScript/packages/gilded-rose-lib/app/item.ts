@@ -1,5 +1,3 @@
-import { Item } from './gilded-rose';
-
 export const DEFAULT_MAX_ITEM_QUALITY = 50;
 export const DEFAULT_MIN_ITEM_QUALITY = 0;
 
@@ -16,6 +14,18 @@ export enum ItemType {
   BACKSTAGE_PASS = 'backstage-pass',
   // conjured items degrade in quality twice as fast as normal items
   CONJURED = 'conjured',
+}
+
+export class Item {
+  name: string;
+  sellIn: number;
+  quality: number;
+
+  constructor(name, sellIn, quality) {
+    this.name = name;
+    this.sellIn = sellIn;
+    this.quality = quality;
+  }
 }
 
 export abstract class AbstractItem extends Item {
@@ -44,7 +54,7 @@ export abstract class AbstractItem extends Item {
    */
   abstract updateQuality(days?: number): number;
 
-  public toJson() {
+  public toJSON() {
     return {
       type: this.type,
       id: this.id,
@@ -52,6 +62,18 @@ export abstract class AbstractItem extends Item {
       quality: this.quality,
       sellIn: this.sellIn,
     };
+  }
+
+  public update({ name, quality, sellIn }: Partial<Item>) {
+    if (name !== undefined) {
+      this.name = name;
+    }
+    if (quality !== undefined) {
+      this.quality = quality;
+    }
+    if (sellIn !== undefined) {
+      this.sellIn = sellIn;
+    }
   }
 }
 

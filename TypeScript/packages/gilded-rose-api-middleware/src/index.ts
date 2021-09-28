@@ -9,12 +9,24 @@ import {
 } from "gilded-rose-lib";
 import data from "./data.json";
 import uuid from "./lib/uuid";
+import path from "path";
 
 type Data = {
   inventory: typeof data;
 };
 
-const GildedRoseApiMiddleware = () => {
+interface Config {
+  absolutePath: string;
+  catchAllKey: string;
+}
+
+const GildedRoseApiMiddleware = ({ absolutePath, catchAllKey }: Config) => {
+  const createPath = (p: string) => path.join(absolutePath, p);
+
+  const getParam = (req: NextApiRequest) => {
+    return req.query?.[catchAllKey]?.[0];
+  };
+
   const handler = nextConnect();
   const gildedRose = new GildedRose(
     // data would normally be fetched from a database or something
@@ -28,27 +40,48 @@ const GildedRoseApiMiddleware = () => {
   );
 
   handler
-    .get((req: NextApiRequest, res: NextApiResponse<Data>) => {
+    .get(absolutePath, (req: NextApiRequest, res: NextApiResponse<Data>) => {
       res
         .status(200)
-        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
+        .json({ inventory: gildedRose.items.map((item) => item.toJSON()) });
     })
-    .delete((req: NextApiRequest, res: NextApiResponse<Data>) => {
-      const { id } = JSON.parse(req.body);
-      gildedRose.delete(id);
-      res
-        .status(200)
-        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
-    })
-    .post((req: NextApiRequest, res: NextApiResponse<Data>) => {
+    .get(
+      createPath("/:id"),
+      (req: NextApiRequest, res: NextApiResponse<any>) => {
+        res.status(200).json({ foo: "bar" });
+      }
+    )
+    .delete(
+      createPath("/:id"),
+      (req: NextApiRequest, res: NextApiResponse<Data>) => {
+        const id = getParam(req);
+        if (id) {
+          gildedRose.delete(id);
+          res
+            .status(200)
+            .json({ inventory: gildedRose.items.map((item) => item.toJSON()) });
+        }
+      }
+    )
+    .post(absolutePath, (req: NextApiRequest, res: NextApiResponse<Data>) => {
       const item = JSON.parse(req.body);
       gildedRose.items.push(
         itemFactory(item.type, uuid(), item.name, item.sellIn, item.quality)
       );
       res
         .status(200)
-        .json({ inventory: gildedRose.items.map((item) => item.toJson()) });
-    });
+        .json({ inventory: gildedRose.items.map((item) => item.toJSON()) });
+    })
+    .post(
+      createPath("/:id"),
+      (req: NextApiRequest, res: NextApiResponse<AbstractItem>) => {
+        const item = gildedRose.getById(getParam(req));
+        const newItem: AbstractItem = JSON.parse(req.body);
+        if (item && newItem) {
+          res.status(200).json(gildedRose.updateItem(item.id, newItem));
+        }
+      }
+    );
 
   return handler;
 };

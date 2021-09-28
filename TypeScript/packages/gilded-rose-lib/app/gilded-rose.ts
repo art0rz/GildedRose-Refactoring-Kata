@@ -1,17 +1,6 @@
 // The Quality of an item is never more than 50
 import { AbstractItem } from './item';
-
-export class Item {
-  name: string;
-  sellIn: number;
-  quality: number;
-
-  constructor(name, sellIn, quality) {
-    this.name = name;
-    this.sellIn = sellIn;
-    this.quality = quality;
-  }
-}
+import { itemFactory } from './factory';
 
 export class GildedRose {
   items: Array<AbstractItem>;
@@ -36,5 +25,27 @@ export class GildedRose {
 
   delete(id: string) {
     this.items = this.items.filter((item) => item.id !== id);
+  }
+
+  getById(id: string) {
+    return this.items.find((item) => item.id === id);
+  }
+
+  updateItem(id: string, item: AbstractItem): AbstractItem {
+    const originalItem = this.getById(id);
+
+    if (originalItem === undefined) {
+      throw new Error(`Couldn't find item with id ${id}`);
+    }
+
+    if (item.type !== originalItem.type) {
+      const newItem = itemFactory(item.type, id, item.name, item.sellIn, item.quality);
+      this.items.splice(this.items.indexOf(originalItem), 1, newItem);
+
+      return newItem;
+    } else {
+      originalItem.update(item);
+      return originalItem;
+    }
   }
 }
