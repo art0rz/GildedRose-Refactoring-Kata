@@ -1,6 +1,7 @@
 // The Quality of an item is never more than 50
 import { AbstractItem } from './item';
 import { itemFactory } from './factory';
+import { ITypedItem } from './types';
 
 export class GildedRose {
   items: Array<AbstractItem>;
@@ -31,7 +32,7 @@ export class GildedRose {
     return this.items.find((item) => item.id === id);
   }
 
-  updateItem(id: string, item: AbstractItem): AbstractItem {
+  updateItem(id: string, item: Partial<ITypedItem>): AbstractItem {
     const originalItem = this.getById(id);
 
     if (originalItem === undefined) {
@@ -40,12 +41,12 @@ export class GildedRose {
 
     if (item.type !== originalItem.type) {
       const newItem = itemFactory(
-        item.type,
+        item.type || originalItem.type,
         id,
-        item.name,
-        item.sellIn,
-        item.quality,
-        item.isConjured,
+        item.name || originalItem.name,
+        item.sellIn || originalItem.sellIn,
+        item.quality || originalItem.quality,
+        item.isConjured || originalItem.isConjured,
       );
       this.items.splice(this.items.indexOf(originalItem), 1, newItem);
 
