@@ -1,10 +1,11 @@
-import { AgedItem, BackstagePassItem, ConjuredItem, LegendaryItem, NormalItem } from '../app/item';
+import { AgedItem, BackstagePassItem, ItemType, LegendaryItem, NormalItem } from '../app/item';
 import { expect } from 'chai';
 
 describe('item types', () => {
   describe('NormalItem', () => {
     it('should have properties equal to the constructor arguments', () => {
       const item = new NormalItem('1', 'foo', 0, 0);
+      expect(item.type).to.equal(ItemType.NORMAL);
       expect(item.id).to.equal('1');
       expect(item.name).to.equal('foo');
       expect(item.sellIn).to.equal(0);
@@ -36,6 +37,7 @@ describe('item types', () => {
   describe('AgedItem', () => {
     it('should have properties equal to the constructor arguments', () => {
       const item = new AgedItem('1', 'foo', 0, 0);
+      expect(item.type).to.equal(ItemType.AGED);
       expect(item.id).to.equal('1');
       expect(item.name).to.equal('foo');
       expect(item.sellIn).to.equal(0);
@@ -50,7 +52,7 @@ describe('item types', () => {
       const item = new AgedItem('1', 'foo', 10, 10);
       expect(item.updateQuality()).to.equal(11);
     });
-    it('increase quality twice as fast when sellIn is less than 0', () => {
+    it('should increase item quality twice as fast when sellIn is less than 0', () => {
       const item = new AgedItem('1', 'foo', 0, 10);
       expect(item.updateQuality()).to.equal(12);
     });
@@ -62,6 +64,7 @@ describe('item types', () => {
   describe('LegendaryItem', () => {
     it('should have properties equal to the constructor arguments', () => {
       const item = new LegendaryItem('1', 'foo', 0, 0);
+      expect(item.type).to.equal(ItemType.LEGENDARY);
       expect(item.id).to.equal('1');
       expect(item.name).to.equal('foo');
       expect(item.sellIn).to.equal(0);
@@ -80,6 +83,7 @@ describe('item types', () => {
   describe('BackstagePassItem', function () {
     it('should have properties equal to the constructor arguments', () => {
       const item = new BackstagePassItem('1', 'foo', 0, 0);
+      expect(item.type).to.equal(ItemType.BACKSTAGE_PASS);
       expect(item.id).to.equal('1');
       expect(item.name).to.equal('foo');
       expect(item.sellIn).to.equal(0);
@@ -125,34 +129,6 @@ describe('item types', () => {
       expect(item.quality).to.equal(0);
       item.updateQuality();
       expect(item.sellIn).to.equal(-2);
-      expect(item.quality).to.equal(0);
-    });
-  });
-
-  describe('ConjuredItem', () => {
-    it('should have properties equal to the constructor arguments', () => {
-      const item = new ConjuredItem('1', 'foo', 0, 0);
-      expect(item.id).to.equal('1');
-      expect(item.name).to.equal('foo');
-      expect(item.sellIn).to.equal(0);
-      expect(item.quality).to.equal(0);
-    });
-    it('should reduce in quality twice as fast as regular items', () => {
-      const item = new ConjuredItem('1', 'Conjured Mana Cake', 10, 10);
-      item.updateQuality();
-      expect(item.sellIn).to.equal(9);
-      expect(item.quality).to.equal(8);
-      item.updateQuality();
-      expect(item.sellIn).to.equal(8);
-      expect(item.quality).to.equal(6);
-    });
-    it('should not reduce the quality below 0 after sellIn', () => {
-      const item = new ConjuredItem('1', 'Conjured Mana Cake', 1, 2);
-      item.updateQuality();
-      expect(item.sellIn).to.equal(0);
-      expect(item.quality).to.equal(0);
-      item.updateQuality();
-      expect(item.sellIn).to.equal(-1);
       expect(item.quality).to.equal(0);
     });
   });

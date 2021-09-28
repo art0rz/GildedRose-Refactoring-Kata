@@ -1,5 +1,5 @@
 import { GildedRose } from '../app/gilded-rose';
-import { AgedItem, BackstagePassItem, ConjuredItem, LegendaryItem, NormalItem } from '../app/item';
+import { AgedItem, BackstagePassItem, LegendaryItem, NormalItem } from '../app/item';
 
 const items = [
   new NormalItem('1', '+5 Dexterity Vest', 10, 20), //
@@ -11,7 +11,7 @@ const items = [
   new BackstagePassItem('7', 'Backstage passes to a TAFKAL80ETC concert', 10, 49),
   new BackstagePassItem('8', 'Backstage passes to a TAFKAL80ETC concert', 5, 49),
   // this conjured item does not work properly yet
-  new ConjuredItem('9', 'Conjured Mana Cake', 3, 6),
+  new NormalItem('9', 'Conjured Mana Cake', 3, 6, true),
 ];
 
 const gildedRose = new GildedRose(items);

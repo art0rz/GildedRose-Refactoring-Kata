@@ -24,7 +24,6 @@ const itemTypeCopy = {
   [ItemType.AGED]: 'Aged',
   [ItemType.LEGENDARY]: 'Legendary',
   [ItemType.BACKSTAGE_PASS]: 'Backstage Pass',
-  [ItemType.CONJURED]: 'Conjured',
 };
 
 const ControlledSelect = ({

@@ -8,7 +8,8 @@ import { getConfigForType, ItemType, AbstractItem } from './item';
  * @param id {string}
  * @param name {string}
  * @param sellIn {number}
- * @param quality {quality}
+ * @param quality {number}
+ * @param isConjured {number}
  */
 export const itemFactory = (
   type: ItemType = ItemType.NORMAL,
@@ -16,6 +17,7 @@ export const itemFactory = (
   name: string,
   sellIn: number,
   quality: number,
+  isConjured: boolean = false,
 ): AbstractItem => {
-  return new (getConfigForType(type).itemClass)(id, name, sellIn, quality);
+  return new (getConfigForType(type).itemClass)(id, name, sellIn, quality, isConjured);
 };

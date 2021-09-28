@@ -12,8 +12,6 @@ export enum ItemType {
   // 	Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but
   // 	Quality drops to 0 after the concert
   BACKSTAGE_PASS = 'backstage-pass',
-  // conjured items degrade in quality twice as fast as normal items
-  CONJURED = 'conjured',
 }
 
 export class Item {
@@ -32,19 +30,20 @@ export abstract class AbstractItem extends Item {
   public id!: string;
   public name!: string;
   public sellIn!: number;
-  public quality!: number;
   public type!: ItemType;
 
+  public isConjured!: boolean;
+
   constructor(
-    type: ItemType = ItemType.NORMAL,
     id: string,
     name: string,
     sellIn: number,
     quality: number,
+    isConjured: boolean = false,
   ) {
     super(name, sellIn, quality);
+    this.isConjured = isConjured;
     this.id = id;
-    this.type = type;
   }
 
   /**
@@ -75,15 +74,21 @@ export abstract class AbstractItem extends Item {
       this.sellIn = sellIn;
     }
   }
+
+  public getConjuredMultiplier() {
+    if (this.isConjured === true) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
 }
 
 /**
  * Normal items degrade in quality over time
  */
 export class NormalItem extends AbstractItem {
-  constructor(id: string, name: string, sellIn: number, quality: number) {
-    super(ItemType.NORMAL, id, name, sellIn, quality);
-  }
+  type = ItemType.NORMAL;
 
   updateQuality(days: number = 1): number {
     let { qualityDegradation, minQuality, maxQuality } = getConfigForType(this.type);
@@ -91,8 +96,11 @@ export class NormalItem extends AbstractItem {
     this.sellIn = this.sellIn - days;
 
     if (this.sellIn < 0) {
+      // Once the sell by date has passed, Quality degrades twice as fast
       qualityDegradation = qualityDegradation * 2;
     }
+
+    qualityDegradation *= this.getConjuredMultiplier();
 
     this.quality = Math.min(
       maxQuality,
@@ -107,19 +115,14 @@ export class NormalItem extends AbstractItem {
  * Aged items increase in quality over time
  */
 export class AgedItem extends NormalItem {
-  constructor(id: string, name: string, sellIn: number, quality: number) {
-    super(id, name, sellIn, quality);
-    this.type = ItemType.AGED;
-  }
+  type = ItemType.AGED;
 }
 
 /**
  * Legendary items never decrease in quality
  */
 export class LegendaryItem extends AbstractItem {
-  constructor(id: string, name: string, sellIn: number, quality: number) {
-    super(ItemType.LEGENDARY, id, name, sellIn, quality);
-  }
+  type = ItemType.LEGENDARY;
 
   updateQuality(days: number = 1): number {
     this.sellIn = this.sellIn - days;
@@ -133,9 +136,7 @@ export class LegendaryItem extends AbstractItem {
  * Quality drops to 0 after the concert
  */
 export class BackstagePassItem extends AbstractItem {
-  constructor(id: string, name: string, sellIn: number, quality: number) {
-    super(ItemType.BACKSTAGE_PASS, id, name, sellIn, quality);
-  }
+  type = ItemType.BACKSTAGE_PASS;
 
   updateQuality(days: number = 1): number {
     let { qualityDegradation, minQuality, maxQuality } = getConfigForType(this.type);
@@ -155,6 +156,8 @@ export class BackstagePassItem extends AbstractItem {
         qualityDegradation--;
       }
 
+      qualityDegradation *= this.getConjuredMultiplier();
+
       this.quality = Math.min(
         maxQuality,
         Math.max(minQuality, this.quality - qualityDegradation * days),
@@ -165,22 +168,11 @@ export class BackstagePassItem extends AbstractItem {
   }
 }
 
-/**
- * "Conjured" items degrade in Quality twice as fast as normal items
- */
-export class ConjuredItem extends NormalItem {
-  constructor(id: string, name: string, sellIn: number, quality: number) {
-    super(id, name, sellIn, quality);
-    this.type = ItemType.CONJURED;
-  }
-}
-
 type ItemTypeClassMap = {
-  [ItemType.NORMAL]: typeof ConjuredItem;
+  [ItemType.NORMAL]: typeof NormalItem;
   [ItemType.AGED]: typeof AgedItem;
   [ItemType.LEGENDARY]: typeof LegendaryItem;
   [ItemType.BACKSTAGE_PASS]: typeof BackstagePassItem;
-  [ItemType.CONJURED]: typeof ConjuredItem;
 };
 
 export interface ItemTypeConfig<T> {
@@ -219,12 +211,6 @@ export const itemTypeConfig: {
     minQuality: DEFAULT_MIN_ITEM_QUALITY,
     maxQuality: DEFAULT_MAX_ITEM_QUALITY,
     itemClass: BackstagePassItem,
-  },
-  [ItemType.CONJURED]: {
-    qualityDegradation: 2,
-    minQuality: DEFAULT_MIN_ITEM_QUALITY,
-    maxQuality: DEFAULT_MAX_ITEM_QUALITY,
-    itemClass: ConjuredItem,
   },
 };
 
