@@ -106,7 +106,7 @@ const Home: NextPage = () => {
               disableExport: true,
               renderCell: (props) => (
                 <DataGridActionsCell
-                  item={getItemById(props.id)}
+                  item={getItemById(props.row.id) as AbstractItem}
                   onEditClick={onEditItemClick}
                   {...props}
                 />
