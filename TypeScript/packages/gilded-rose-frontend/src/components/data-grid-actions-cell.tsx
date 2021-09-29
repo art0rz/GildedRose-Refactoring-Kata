@@ -8,25 +8,26 @@ import { AbstractItem } from 'gilded-rose-lib';
 
 interface Props extends GridRenderCellParams {
   onEditClick(row: AbstractItem): void;
+  item: AbstractItem;
 }
 
-const DataGridActionsCell = ({ row, onEditClick: onEditClickProp }: Props) => {
+const DataGridActionsCell = ({ item, onEditClick: onEditClickProp }: Props) => {
   const dispatch = useDispatch();
 
   const onDeleteClick = useCallback(
     (event: MouseEvent) => {
-      dispatch(deleteItem(row.id));
+      dispatch(deleteItem(item.id));
       event.stopPropagation();
     },
-    [row, dispatch],
+    [item, dispatch],
   );
 
   const onEditClick = useCallback(
     (event: MouseEvent) => {
-      onEditClickProp(row as AbstractItem);
+      onEditClickProp(item);
       event.stopPropagation();
     },
-    [row, onEditClickProp],
+    [item, onEditClickProp],
   );
 
   return (

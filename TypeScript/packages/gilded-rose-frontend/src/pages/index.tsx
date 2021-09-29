@@ -67,6 +67,13 @@ const Home: NextPage = () => {
     );
   }, [items, simulatedItems]);
 
+  const getItemById = useCallback(
+    (id: string) => {
+      return items.find((item) => id === item.id);
+    },
+    [items],
+  );
+
   return (
     <Layout>
       <Paper
@@ -98,7 +105,11 @@ const Home: NextPage = () => {
               headerName: '',
               disableExport: true,
               renderCell: (props) => (
-                <DataGridActionsCell onEditClick={onEditItemClick} {...props} />
+                <DataGridActionsCell
+                  item={getItemById(props.id)}
+                  onEditClick={onEditItemClick}
+                  {...props}
+                />
               ),
             },
           ]}
