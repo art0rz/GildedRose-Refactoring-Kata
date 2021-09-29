@@ -61,26 +61,45 @@ describe('GildedRose', function () {
     });
   });
   describe('updateItem', () => {
-    const item1 = new NormalItem('1', 'foo', 10, 10);
-    const item2 = new NormalItem('2', 'bar', 9, 9);
+    const item1 = new NormalItem('1', 'foo', 10, 10, true);
+    const item2 = new NormalItem('2', 'bar', 9, 9, true);
     const item3 = new NormalItem('3', 'baz', 8, 8);
     gildedRose = new GildedRose([item1, item2, item3]);
     it('should update the correct item', () => {
       gildedRose.updateItem('1', {
         name: 'moo',
         type: ItemType.AGED,
+        quality: 20,
+        sellIn: 20,
+        isConjured: false,
       });
       expect(gildedRose.getById('1')?.name).to.equal('moo');
       expect(gildedRose.getById('1')?.type).to.equal(ItemType.AGED);
+      expect(gildedRose.getById('1')?.quality).to.equal(20);
+      expect(gildedRose.getById('1')?.sellIn).to.equal(20);
+      expect(gildedRose.getById('1')?.isConjured).to.equal(false);
       gildedRose.updateItem('2', {
         name: 'woot',
+        quality: 19,
+        sellIn: 19,
+        isConjured: false,
       });
       expect(gildedRose.getById('2')?.name).to.equal('woot');
       expect(gildedRose.getById('2')?.type).to.equal(ItemType.NORMAL);
+      expect(gildedRose.getById('2')?.quality).to.equal(19);
+      expect(gildedRose.getById('2')?.sellIn).to.equal(19);
+      expect(gildedRose.getById('2')?.isConjured).to.equal(false);
     });
 
     it('should throw an error when given a non-existant ID', () => {
       expect(() => gildedRose.updateItem('10', {})).to.throw();
+    });
+  });
+  describe('toJSON', () => {
+    it('should return a list of all items', () => {
+      expect(JSON.stringify(gildedRose)).to.equal(
+        '[{"type":"normal","id":"1","name":"foo","quality":10,"sellIn":10,"isConjured":false},{"type":"normal","id":"2","name":"bar","quality":9,"sellIn":9,"isConjured":false},{"type":"normal","id":"3","name":"baz","quality":8,"sellIn":8,"isConjured":false}]',
+      );
     });
   });
 });

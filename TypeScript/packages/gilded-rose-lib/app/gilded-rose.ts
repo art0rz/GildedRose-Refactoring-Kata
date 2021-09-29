@@ -39,7 +39,7 @@ export class GildedRose {
       throw new Error(`Couldn't find item with id ${id}`);
     }
 
-    if (item.type !== originalItem.type) {
+    if (item.type !== undefined && item.type !== originalItem.type) {
       const newItem = itemFactory({
         ...originalItem,
         ...item,
@@ -52,5 +52,9 @@ export class GildedRose {
       originalItem.update(item);
       return originalItem;
     }
+  }
+
+  toJSON() {
+    return this.items.map((item) => item.toJSON());
   }
 }
