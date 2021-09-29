@@ -49,11 +49,25 @@ export abstract class AbstractItem extends Item {
   }
 
   /**
+   * Returns the quality of an item if aged by the amount of days passed to the method
+   * @param age {number}
+   * @return {number}
+   */
+  abstract simulateQuality(age: number): { sellIn: number; quality: number };
+
+  /**
    * Ages the item by the amount of days supplied as the argument `days`
    * @param days {number}
    * @return {number}
    */
-  abstract updateQuality(days?: number): number;
+  updateQuality(days: number = 1): number {
+    const { sellIn, quality } = this.simulateQuality(days);
+
+    this.sellIn = sellIn;
+    this.quality = quality;
+
+    return quality;
+  }
 
   public toJSON(): ITypedItem {
     return {
@@ -96,24 +110,24 @@ export abstract class AbstractItem extends Item {
 export class NormalItem extends AbstractItem {
   type = ItemType.NORMAL;
 
-  updateQuality(days: number = 1): number {
+  simulateQuality(days): { sellIn: number; quality: number } {
     let { qualityDegradation, minQuality, maxQuality } = getConfigForType(this.type);
 
-    this.sellIn = this.sellIn - days;
+    const sellIn = this.sellIn - days;
 
-    if (this.sellIn < 0) {
+    if (sellIn < 0) {
       // Once the sell by date has passed, Quality degrades twice as fast
       qualityDegradation = qualityDegradation * 2;
     }
 
     qualityDegradation *= this.getConjuredMultiplier();
 
-    this.quality = Math.min(
+    const quality = Math.min(
       maxQuality,
       Math.max(minQuality, this.quality - qualityDegradation * days),
     );
 
-    return this.quality;
+    return { sellIn, quality };
   }
 }
 
@@ -130,9 +144,8 @@ export class AgedItem extends NormalItem {
 export class LegendaryItem extends AbstractItem {
   type = ItemType.LEGENDARY;
 
-  updateQuality(days: number = 1): number {
-    this.sellIn = this.sellIn - days;
-    return this.quality;
+  simulateQuality(days: number): { sellIn: number; quality: number } {
+    return { quality: this.quality, sellIn: this.sellIn - days };
   }
 }
 
@@ -144,33 +157,31 @@ export class LegendaryItem extends AbstractItem {
 export class BackstagePassItem extends AbstractItem {
   type = ItemType.BACKSTAGE_PASS;
 
-  updateQuality(days: number = 1): number {
+  simulateQuality(days: number = 1): { quality: number; sellIn: number } {
     let { qualityDegradation, minQuality, maxQuality } = getConfigForType(this.type);
 
-    this.sellIn = this.sellIn - days;
+    const sellIn = this.sellIn - days;
+    let quality = this.quality;
 
-    if (this.sellIn < 0) {
+    if (sellIn < 0) {
       // quality drops to 0 after the concert
-      this.quality = 0;
+      quality = 0;
     } else {
       // quality degrades +1, 10 days or less before concert
-      if (this.sellIn < 10) {
+      if (sellIn < 10) {
         qualityDegradation--;
       }
       // quality degrades another +1, 5 days or less before concert
-      if (this.sellIn < 5) {
+      if (sellIn < 5) {
         qualityDegradation--;
       }
 
       qualityDegradation *= this.getConjuredMultiplier();
 
-      this.quality = Math.min(
-        maxQuality,
-        Math.max(minQuality, this.quality - qualityDegradation * days),
-      );
+      quality = Math.min(maxQuality, Math.max(minQuality, quality - qualityDegradation * days));
     }
 
-    return this.quality;
+    return { quality, sellIn };
   }
 }
 

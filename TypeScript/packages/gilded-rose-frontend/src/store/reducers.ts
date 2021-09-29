@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import Types from './types';
-import { AbstractItem, itemFactory } from 'gilded-rose-lib';
+import { AbstractItem, itemFactory, ITypedItem } from 'gilded-rose-lib';
 
 interface DefaultAction {
   type: Types.GET_ITEMS | Types.UPDATE_ITEM;
@@ -14,19 +14,30 @@ interface GetItemsAction {
 
 interface UpdateItemAction {
   type: Types.UPDATE_ITEM_COMPLETE;
-  payload: AbstractItem;
+  payload: ITypedItem;
+}
+
+interface UpdateSimulatedAgeAction {
+  type: Types.UPDATE_SIMULATED_AGE;
+  payload: number;
+}
+
+interface State {
+  items: Array<AbstractItem>;
+  simulatedItems: Array<{ quality: number; sellIn: number }>;
+  isUpdatingItems: boolean;
+  simulatedAge: number;
 }
 
 const inventoryReducer = (
-  state: {
-    items: Array<AbstractItem>;
-    isUpdatingItems: boolean;
-  } = {
+  state: State = {
     items: [],
+    simulatedItems: [],
     isUpdatingItems: false,
+    simulatedAge: 0,
   },
-  { type, payload }: DefaultAction | GetItemsAction | UpdateItemAction,
-) => {
+  { type, payload }: DefaultAction | GetItemsAction | UpdateItemAction | UpdateSimulatedAgeAction,
+): State => {
   switch (type) {
     case Types.GET_ITEMS: {
       return {
@@ -35,11 +46,11 @@ const inventoryReducer = (
       };
     }
     case Types.GET_ITEMS_COMPLETE: {
+      const items = (payload as Array<AbstractItem>).map((item) => itemFactory(item));
       return {
         ...state,
-        items: (payload as Array<AbstractItem>).map((item) =>
-          itemFactory(item.type, item.id, item.name, item.sellIn, item.quality, item.isConjured),
-        ),
+        items,
+        simulatedItems: items.map((item) => item.simulateQuality(state.simulatedAge)),
         isUpdatingItems: false,
       };
     }
@@ -50,12 +61,22 @@ const inventoryReducer = (
       };
     }
     case Types.UPDATE_ITEM_COMPLETE: {
+      const items = state.items.map((item) =>
+        // only update the selected item
+        item.id === (payload as AbstractItem).id ? itemFactory(payload as ITypedItem) : item,
+      );
       return {
         ...state,
-        items: state.items.map((item) =>
-          item.id === (payload as AbstractItem).id ? payload : item,
-        ),
+        items,
+        simulatedItems: items.map((item) => item.simulateQuality(state.simulatedAge)),
         isUpdatingItems: false,
+      };
+    }
+    case Types.UPDATE_SIMULATED_AGE: {
+      return {
+        ...state,
+        simulatedAge: payload as number,
+        simulatedItems: state.items.map((item) => item.simulateQuality(payload as number)),
       };
     }
     default:

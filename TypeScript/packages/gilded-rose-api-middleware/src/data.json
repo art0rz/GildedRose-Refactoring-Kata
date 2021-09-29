@@ -1,7 +1,7 @@
 [
   {
     "type": "normal",
-    "id": "3a5026b2-ea16-4445-a6d7-bc62e703270d",
+    "id": "",
     "name": "+5 Dexterity Vest",
     "sellIn": 10,
     "quality": 10,
@@ -9,14 +9,14 @@
   },
   {
     "type": "aged",
-    "id": "7177b561-171f-4289-9c6f-1fc21a314d4e",
+    "id": "",
     "name": "Aged Brie",
     "sellIn": 10,
     "quality": 10
   },
   {
     "type": "aged",
-    "id": "f0685ee5-420c-4812-8ec4-5d5673e692ee",
+    "id": "",
     "name": "Aged Brie",
     "sellIn": 10,
     "quality": 10,
@@ -24,21 +24,21 @@
   },
   {
     "type": "normal",
-    "id": "84b23625-a682-451b-a648-0f9e35bbb9da",
+    "id": "",
     "name": "Elixir of the Mongoose",
     "sellIn": 5,
     "quality": 7
   },
   {
     "type": "legendary",
-    "id": "6df1939b-dda2-4f74-83ae-8424a8c0dd69",
+    "id": "",
     "name": "Sulfuras, Hand of Ragnaros",
     "sellIn": 0,
     "quality": 80
   },
   {
     "type": "legendary",
-    "id": "d4fc9c3c-f278-4157-a207-ef2106a8197d",
+    "id": "",
     "name": "Sulfuras, Hand of Ragnaros",
     "sellIn": -0,
     "quality": 80,
@@ -46,14 +46,14 @@
   },
   {
     "type": "backstage-pass",
-    "id": "5cd267d8-d3e5-4349-9f00-7e5016eb6c80",
+    "id": "",
     "name": "Backstage passes to a TAFKAL80ETC concert",
     "sellIn": 15,
     "quality": 20
   },
   {
     "type": "backstage-pass",
-    "id": "ada9afdf-3870-4803-b23e-1888d3aa566e",
+    "id": "",
     "name": "Backstage passes to a TAFKAL80ETC concert",
     "sellIn": 10,
     "quality": 49,
@@ -61,14 +61,88 @@
   },
   {
     "type": "backstage-pass",
-    "id": "c721bb77-d8a6-44f0-a4de-f7dbc5fa5020",
+    "id": "",
     "name": "Backstage passes to a TAFKAL80ETC concert",
     "sellIn": 5,
     "quality": 49
   },
   {
     "type": "conjured",
-    "id": "ad6fbc3b-e383-491c-8cf8-05a6ec0f1434",
+    "id": "",
+    "name": "Conjured Mana Cake",
+    "sellIn": 3,
+    "quality": 6
+  },
+  {
+    "type": "normal",
+    "id": "",
+    "name": "+5 Dexterity Vest",
+    "sellIn": 10,
+    "quality": 10,
+    "isConjured": true
+  },
+  {
+    "type": "aged",
+    "id": "",
+    "name": "Aged Brie",
+    "sellIn": 10,
+    "quality": 10
+  },
+  {
+    "type": "aged",
+    "id": "",
+    "name": "Aged Brie",
+    "sellIn": 10,
+    "quality": 10,
+    "isConjured": true
+  },
+  {
+    "type": "normal",
+    "id": "",
+    "name": "Elixir of the Mongoose",
+    "sellIn": 5,
+    "quality": 7
+  },
+  {
+    "type": "legendary",
+    "id": "",
+    "name": "Sulfuras, Hand of Ragnaros",
+    "sellIn": 0,
+    "quality": 80
+  },
+  {
+    "type": "legendary",
+    "id": "",
+    "name": "Sulfuras, Hand of Ragnaros",
+    "sellIn": -0,
+    "quality": 80,
+    "isConjured": true
+  },
+  {
+    "type": "backstage-pass",
+    "id": "",
+    "name": "Backstage passes to a TAFKAL80ETC concert",
+    "sellIn": 15,
+    "quality": 20
+  },
+  {
+    "type": "backstage-pass",
+    "id": "",
+    "name": "Backstage passes to a TAFKAL80ETC concert",
+    "sellIn": 10,
+    "quality": 49,
+    "isConjured": true
+  },
+  {
+    "type": "backstage-pass",
+    "id": "",
+    "name": "Backstage passes to a TAFKAL80ETC concert",
+    "sellIn": 5,
+    "quality": 49
+  },
+  {
+    "type": "conjured",
+    "id": "",
     "name": "Conjured Mana Cake",
     "sellIn": 3,
     "quality": 6

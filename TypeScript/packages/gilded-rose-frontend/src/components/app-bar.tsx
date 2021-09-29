@@ -20,7 +20,13 @@ interface Props {
 const AppBar = ({ breadcrumbs = [] }: Props) => {
   const theme = useTheme();
   return (
-    <MuiAppBar position="sticky">
+    <MuiAppBar
+      position="sticky"
+      sx={{
+        position: 'relative',
+        zIndex: 1,
+      }}
+    >
       <Toolbar>
         <ClassNames>
           {({ css }) => (

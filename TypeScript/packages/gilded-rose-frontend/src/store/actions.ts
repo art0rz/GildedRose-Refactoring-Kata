@@ -43,3 +43,7 @@ export const updateItem = (id: string, item: Item) => async (dispatch: Dispatch)
   ).json();
   return dispatch({ type: Types.UPDATE_ITEM_COMPLETE, payload: newItem });
 };
+
+export const updateSimulatedAge = (age: number) => (dispatch: Dispatch) => {
+  dispatch({ type: Types.UPDATE_SIMULATED_AGE, payload: age });
+};

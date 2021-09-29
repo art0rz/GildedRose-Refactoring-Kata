@@ -40,14 +40,11 @@ export class GildedRose {
     }
 
     if (item.type !== originalItem.type) {
-      const newItem = itemFactory(
-        item.type || originalItem.type,
+      const newItem = itemFactory({
+        ...originalItem,
+        ...item,
         id,
-        item.name || originalItem.name,
-        item.sellIn || originalItem.sellIn,
-        item.quality || originalItem.quality,
-        item.isConjured || originalItem.isConjured,
-      );
+      });
       this.items.splice(this.items.indexOf(originalItem), 1, newItem);
 
       return newItem;

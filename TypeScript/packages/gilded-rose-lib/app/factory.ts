@@ -1,4 +1,7 @@
 import { getConfigForType, ItemType, AbstractItem } from './item';
+import { ITypedItem } from './types';
+
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
 
 /**
  * Given a ItemType, constructs the appropriate item class with the given properties and returns it.
@@ -11,13 +14,13 @@ import { getConfigForType, ItemType, AbstractItem } from './item';
  * @param quality {number}
  * @param isConjured {number}
  */
-export const itemFactory = (
-  type: ItemType = ItemType.NORMAL,
-  id: string,
-  name: string,
-  sellIn: number,
-  quality: number,
-  isConjured: boolean = false,
-): AbstractItem => {
+export const itemFactory = ({
+  type = ItemType.NORMAL,
+  id,
+  name,
+  sellIn,
+  quality,
+  isConjured = false,
+}: Optional<ITypedItem, 'isConjured'>): AbstractItem => {
   return new (getConfigForType(type).itemClass)(id, name, sellIn, quality, isConjured);
 };

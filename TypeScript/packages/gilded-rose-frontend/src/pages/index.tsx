@@ -8,10 +8,10 @@ import { createItem, deleteItem, getItems, updateItem } from '../store/actions';
 import DataGridActionsCell from '../components/data-grid-actions-cell';
 import DataGridToolbar from '../components/data-grid-toolbar';
 import ItemModal from '../components/item-modal';
-import { AbstractItem, Item } from 'gilded-rose-lib';
+import { AbstractItem, Item, ITypedItem } from 'gilded-rose-lib';
 
 const Home: NextPage = () => {
-  const { items, isUpdatingItems } = useSelector((state) => state.inventory);
+  const { items, isUpdatingItems, simulatedItems } = useSelector((state) => state.inventory);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -56,11 +56,27 @@ const Home: NextPage = () => {
     [dispatch, editingItem],
   );
 
+  const [gridItems, setGridItems] = useState<Array<ITypedItem>>([]);
+
+  useEffect(() => {
+    setGridItems(
+      items.map((item, idx) => ({
+        ...item,
+        ...simulatedItems[idx],
+      })),
+    );
+  }, [items, simulatedItems]);
+
   return (
     <Layout>
-      <Paper>
+      <Paper
+        sx={{
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         <DataGrid
-          rows={items}
+          rows={gridItems}
           columns={[
             { field: 'name', headerName: 'Name', flex: 1 },
             { field: 'type', headerName: 'Type', width: 150 },
